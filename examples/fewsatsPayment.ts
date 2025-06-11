@@ -5,20 +5,17 @@ const client = new Fewsats({ apiKey: process.env.FEWSATS_API_KEY });
 
 async function pay(offer: any) {
   console.log("Paying using Fewsats:");
+  console.log(offer);
   
   try {
     // Use the SDK to pay the offer
-    const response = await client.payOffer(offer.offer_id, {
-      payment_context_token: offer.payment_context_token,
-      payment_method: "lightning"
-    });
+    const response = await client.payLightning(offer.payment_request, offer.amount, offer.currency, offer.description);
 
-    if (response.status === 'needs_review')
-      console.log('Payment needs review:', response);
-    else if (response.status === 'success')
+    if (response.success) {
       console.log('Payment successful:', response);
-    else
-      console.log('Payment status:', response.status);
+    } else {
+      console.log('Payment failed:', response.error);
+    }
   } catch (error) {
     console.error('Payment failed:', error.message);
   }
