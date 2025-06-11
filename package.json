@@ -1,6 +1,6 @@
 {
   "name": "@serendipityai/markdown2pdf-typescript",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "⚡ TypeScript client for markdown2pdf.ai - Convert markdown to PDF with Lightning payments",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
