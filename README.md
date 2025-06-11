@@ -10,7 +10,7 @@ Read the full documentation at [markdown2pdf.ai](https://markdown2pdf.ai)
 
 Here's the output of a markdown file converted to PDF format, showing cover page, table of contents and table support. Our engine is powered by LaTeX rather than HTML to PDF conversion as many other libraries and services use, which results in a much higher quality, print–ready output.
 
-<img src="examples.png" />
+<img src="https://raw.githubusercontent.com/Serendipity-AI/markdown2pdf-python/refs/heads/master/images/examples.png" />
 
 This package provides a TypeScript (Node) client for the markdown2pdf.ai service. You can read full instructions in [our documentation](https://markdown2pdf.ai).
 
