@@ -27,18 +27,19 @@ npm install @serendipityai/markdown2pdf-typescript
 ### Using the TypeScript (Node) Client
 
 ```typescript
-import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
+import { convertMarkdownToPdf } from "./dist/index.js";
+import type { OfferDetails } from "./dist/types.js";
 
-async function pay(offer) {
+async function pay(offer: OfferDetails) {
   console.log("⚡ Lightning payment required");
   console.log(`Amount: ${offer.amount} ${offer.currency}`);
   console.log(`Description: ${offer.description}`);
   console.log(`Invoice: ${offer.payment_request}`);
-  await new Promise(resolve => { process.stdin.once("data", () => { resolve(); }); });
+  await new Promise<void>(resolve => { process.stdin.once("data", () => { resolve(); }); });
 }
 
 async function main() {
-  const result = await convertMarkdownToPdf("# Save this one", {
+  const result = await convertMarkdownToPdf("# Save this oneeeee", {
     title: "My document title",
     downloadPath: "output.pdf",
     onPaymentRequest: pay
@@ -46,7 +47,7 @@ async function main() {
   console.log("Saved PDF to:", result);
 }
 
-main().catch(console.error);
+main().catch(console.error); 
 ```
 
 ### Using the CLI
