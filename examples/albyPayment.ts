@@ -1,4 +1,4 @@
-import { convertMarkdownToPdf } from "markdown2pdf-typescript";
+import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 import axios from 'axios';
 
 // Configure Alby client

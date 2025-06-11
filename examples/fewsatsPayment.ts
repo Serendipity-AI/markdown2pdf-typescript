@@ -1,4 +1,4 @@
-import { convertMarkdownToPdf } from "markdown2pdf-typescript";
+import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 import { Fewsats } from 'fewsats';
 // Configure the SDK
 const client = new Fewsats({ apiKey: process.env.FEWSATS_API_KEY });

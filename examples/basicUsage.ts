@@ -1,4 +1,4 @@
-import { convertMarkdownToPdf } from "markdown2pdf-typescript";
+import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 
 async function pay(offer: any) {
   console.log("⚡ Lightning payment required");
