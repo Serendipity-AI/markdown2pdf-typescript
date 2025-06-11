@@ -27,8 +27,8 @@ npm install @serendipityai/markdown2pdf-typescript
 ### Using the TypeScript (Node) Client
 
 ```typescript
-import { convertMarkdownToPdf } from "./dist/index.js";
-import type { OfferDetails } from "./dist/types.js";
+import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
+import type { OfferDetails } from "@serendipityai/markdown2pdf-typescript";
 
 async function pay(offer: OfferDetails) {
   console.log("⚡ Lightning payment required");
