@@ -19,7 +19,7 @@ This package provides a TypeScript (Node) client for the markdown2pdf.ai service
 Install the package using npm:
 
 ```bash
-npm install markdown2pdf-typescript
+npm install @serendipityai/markdown2pdf-typescript
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ npm install markdown2pdf-typescript
 ### Using the TypeScript (Node) Client
 
 ```typescript
-import { convertMarkdownToPdf } from "markdown2pdf-typescript";
+import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 
 async function pay(offer) {
   console.log("⚡ Lightning payment required");
