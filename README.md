@@ -39,7 +39,7 @@ async function pay(offer: OfferDetails) {
 }
 
 async function main() {
-  const result = await convertMarkdownToPdf("# Save this oneeeee", {
+  const result = await convertMarkdownToPdf("# Hello from Typescript", {
     title: "My document title",
     downloadPath: "output.pdf",
     onPaymentRequest: pay
