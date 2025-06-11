@@ -1,11 +1,11 @@
 {
   "name": "markdown2pdf-typescript",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "⚡ TypeScript client for markdown2pdf.ai - Convert markdown to PDF with Lightning payments",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "md2pdf": "./dist/cli.js"
+    "md2pdf": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
