@@ -9,12 +9,12 @@ export type OfferDetails = {
 }
 
 export type ConvertToPdfParams = {
-  onPaymentRequest?: (offer: OfferDetails) => void;
+  onPaymentRequest?: (offer: OfferDetails) => Promise<void>;
   date?: string;
   title?: string;
   downloadPath?: string;
   returnBytes?: boolean;
-}
+};
 
 export class Markdown2PdfError extends Error {
   constructor(message: string) {
