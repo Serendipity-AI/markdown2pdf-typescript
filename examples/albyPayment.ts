@@ -16,7 +16,7 @@ async function pay(offer: any) {
   try {
     // Pay the invoice using Alby's API
     const response = await client.post('/payments/bolt11', {
-      payment_request: offer.payment_request
+      invoice: offer.payment_request
     });
 
     if (response.status === 200)
