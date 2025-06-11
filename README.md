@@ -8,9 +8,15 @@ No sign-ups, no credit cards, just sats for bytes.**
 
 Read the full documentation at [markdown2pdf.ai](https://markdown2pdf.ai)
 
-This package provides a TypeScript client for the markdown2pdf.ai service. You can read full instructions in [our documentation](https://markdown2pdf.ai).
+Here's the output of a markdown file converted to PDF format, showing cover page, table of contents and table support. Our engine is powered by LaTeX rather than HTML to PDF conversion as many other libraries and services use, which results in a much higher quality, print–ready output.
+
+<img src="images/examples.png" />
+
+This package provides a TypeScript (Node) client for the markdown2pdf.ai service. You can read full instructions in [our documentation](https://markdown2pdf.ai).
 
 ## Installation
+
+Install the package using npm:
 
 ```bash
 npm install markdown2pdf-typescript
@@ -18,73 +24,37 @@ npm install markdown2pdf-typescript
 
 ## Usage
 
-### As a Library
+### Using the TypeScript (Node) Client
 
 ```typescript
-import { MarkdownPDF } from 'markdown2pdf-typescript';
+import { convertMarkdownToPdf } from "markdown2pdf-typescript";
 
-async function convertMarkdown() {
-  const handlePayment = (offer) => {
-    console.log("⚡ Lightning payment required");
-    console.log(`Amount: ${offer.amount} ${offer.currency}`);
-    console.log(`Description: ${offer.description}`);
-    console.log(`Invoice: ${offer.payment_request}`);
-    // Handle payment here...
-  };
-
-  const client = new MarkdownPDF(undefined, handlePayment);
-  const path = await client.convert("# Save this one", {
-    title: "My document title",
-    downloadPath: "output.pdf"
-  });
-  console.log("Saved PDF to:", path);
+async function pay(offer) {
+  console.log("⚡ Lightning payment required");
+  console.log(`Amount: ${offer.amount} ${offer.currency}`);
+  console.log(`Description: ${offer.description}`);
+  console.log(`Invoice: ${offer.payment_request}`);
+  await new Promise(resolve => { process.stdin.once("data", () => { resolve(); }); });
 }
+
+async function main() {
+  const result = await convertMarkdownToPdf("# Save this one", {
+    title: "My document title",
+    downloadPath: "output.pdf",
+    onPaymentRequest: pay
+  });
+  console.log("Saved PDF to:", result);
+}
+
+main().catch(console.error);
 ```
 
-### As a CLI Tool
+### Using the CLI
+
+You can also use the CLI (provided by the `md2pdf` binary) to convert a markdown file into a PDF. For example, run:
 
 ```bash
-# Convert a markdown file
-md2pdf input.md -o output.pdf -t "My Document Title"
-
-# Convert markdown string directly
-md2pdf "# Hello World" -o output.pdf
-
-# Use custom date
-md2pdf input.md -d "1 January 2024"
+md2pdf --input test.md --output test_output.pdf --title "My Document Title"
 ```
 
-## Features
-
-- ⚡ Lightning Network payments
-- 🎨 High-quality PDF output
-- 📝 Support for markdown files and strings
-- 🔧 Customizable document title and date
-- 📦 Available as both CLI tool and library
-- 🔍 TypeScript support
-
-## Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run dev
-
-# Build the project
-npm run build
-
-# Run tests
-npm test
-
-# Lint code
-npm run lint
-
-# Format code
-npm run format
-```
-
-## License
-
-MIT
+This command will prompt you (if a Lightning payment is required) and then save the generated PDF at the specified output path.
