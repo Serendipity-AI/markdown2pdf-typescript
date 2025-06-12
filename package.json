@@ -1,7 +1,7 @@
 {
   "name": "@serendipityai/markdown2pdf-typescript",
   "displayName": "Typescript client for markdown2pdf.ai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "⚡ TypeScript client for markdown2pdf.ai - Convert markdown to PDF with Lightning payments",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,14 +9,14 @@
     "md2pdf": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/cli.js",
-    "dev": "ts-node src/cli.ts",
-    "test": "jest",
+    "build": "bun build ./src/index.ts --outdir ./dist --target node && tsc --emitDeclarationOnly",
+    "start": "bun run dist/cli.js",
+    "dev": "bun run src/cli.ts",
+    "test": "bun test",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "bun run build"
   },
   "keywords": [
     "markdown",
@@ -64,7 +64,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=18.0.0"
+    "bun": ">=1.0.0"
   },
   "files": [
     "dist",
