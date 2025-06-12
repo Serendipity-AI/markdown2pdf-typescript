@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { convertMarkdownToPdf } from './client.js';
+import { convertMarkdownToPdf } from './convertMarkdownToPdf.js';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 
