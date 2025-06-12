@@ -6,7 +6,7 @@ export type OfferDetails = {
   payment_context_token: string;
   payment_request_url: string;
   payment_request?: string;
-}
+};
 
 export type ConvertToPdfParams = {
   onPaymentRequest?: (offer: OfferDetails) => Promise<void>;
@@ -19,13 +19,13 @@ export type ConvertToPdfParams = {
 export class Markdown2PdfError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'Markdown2PDFException';
+    this.name = "Markdown2PDFException";
   }
 }
 
 export class PaymentRequiredError extends Markdown2PdfError {
   constructor(message: string) {
     super(message);
-    this.name = 'PaymentRequiredException';
+    this.name = "PaymentRequiredException";
   }
 }

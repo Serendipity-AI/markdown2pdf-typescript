@@ -35,6 +35,7 @@ async function pay(offer: OfferDetails) {
   console.log(`Amount: ${offer.amount} ${offer.currency}`);
   console.log(`Description: ${offer.description}`);
   console.log(`Invoice: ${offer.payment_request}`);
+  console.log(`Press ENTER after paying to continue...`);
   await new Promise<void>(resolve => { process.stdin.once("data", () => { resolve(); }); });
 }
 
