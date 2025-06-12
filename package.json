@@ -13,6 +13,7 @@
     "start": "bun run dist/cli.js",
     "dev": "bun run src/cli.ts",
     "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "clean": "rimraf dist",
@@ -46,6 +47,7 @@
     "zod": "^3.25.61"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/fs-extra": "^11.0.4",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
