@@ -19,6 +19,7 @@ export async function convertMarkdownToPdf(
     title = "Markdown2PDF.ai converted document",
     downloadPath,
     returnBytes = false,
+    apiUrl = M2PDF_API_URL,
   } = options;
 
   if (!onPaymentRequest) throw new Markdown2PdfError("Payment required but no handler provided.");
@@ -40,7 +41,7 @@ export async function convertMarkdownToPdf(
       if (Date.now() - startTime > M2PDF_TIMEOUTS.POLLING)
         throw new Markdown2PdfError(`Conversion timed out after ${M2PDF_TIMEOUTS.POLLING}ms`);
 
-      const response = await withTimeout(axios.post(`${M2PDF_API_URL}/v1/markdown`, payload), M2PDF_TIMEOUTS.REQUEST);
+      const response = await withTimeout(axios.post(`${apiUrl}/v1/markdown`, payload), M2PDF_TIMEOUTS.REQUEST);
 
       if (response.status === 402) {
         const l402Offer = response.data;
@@ -90,7 +91,7 @@ export async function convertMarkdownToPdf(
   }
 
   // Poll for conversion status and get final URL
-  const finalDownloadUrl = await pollConversionStatus(path);
+  const finalDownloadUrl = await pollConversionStatus(path, apiUrl);
 
   // Download and return the PDF
   return downloadPdf(finalDownloadUrl, { downloadPath, returnBytes });

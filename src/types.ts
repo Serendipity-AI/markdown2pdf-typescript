@@ -14,6 +14,7 @@ export type ConvertToPdfParams = {
   title?: string;
   downloadPath?: string;
   returnBytes?: boolean;
+  apiUrl?: string;
 };
 
 export class Markdown2PdfError extends Error {

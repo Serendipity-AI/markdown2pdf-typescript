@@ -63,7 +63,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse) // Status check
         .mockResolvedValueOnce(mockMetadataResponse); // Metadata fetch
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedBuildUrl).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
       expect(mockedWithTimeout).toHaveBeenCalledWith(expect.any(Promise), M2PDF_TIMEOUTS.REQUEST);
@@ -74,6 +74,20 @@ describe("pollConversionStatus", () => {
       expect(mockedSleep).not.toHaveBeenCalled();
     });
 
+    it("should use custom apiUrl when provided", async () => {
+      const customApiUrl = "https://custom.api.example.com";
+      const customStatusUrl = `${customApiUrl}/api/conversion/status/test-123`;
+      mockedBuildUrl.mockReturnValue(customStatusUrl);
+
+      mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(mockMetadataResponse);
+
+      const result = await pollConversionStatus(mockPath, customApiUrl);
+
+      expect(mockedBuildUrl).toHaveBeenCalledWith(mockPath, customApiUrl);
+      expect(mockedAxiosGet).toHaveBeenCalledWith(customStatusUrl);
+      expect(result).toBe(mockDownloadUrl);
+    });
+
     it("should poll multiple times until conversion is done", async () => {
       mockedAxiosGet
         .mockResolvedValueOnce(mockPendingResponse) // First poll - pending
@@ -81,7 +95,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse) // Third poll - done
         .mockResolvedValueOnce(mockMetadataResponse); // Metadata fetch
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedAxiosGet).toHaveBeenCalledTimes(4);
       expect(mockedSleep).toHaveBeenCalledWith(M2PDF_POLL_INTERVAL);
@@ -99,7 +113,7 @@ describe("pollConversionStatus", () => {
 
       mockedAxiosGet.mockResolvedValue(mockPendingResponse);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow(
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(
         `Status polling timed out after ${M2PDF_TIMEOUTS.POLLING}ms`,
       );
     });
@@ -116,7 +130,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse) // Second poll - done
         .mockResolvedValueOnce(mockMetadataResponse); // Metadata
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
       expect(result).toBe(mockDownloadUrl);
     });
   });
@@ -126,7 +140,7 @@ describe("pollConversionStatus", () => {
       const errorResponse = { ...mockPendingResponse, status: 500 };
       mockedAxiosGet.mockResolvedValueOnce(errorResponse);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Polling error");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow("Polling error");
     });
 
     it("should throw error when done but no path provided", async () => {
@@ -137,7 +151,9 @@ describe("pollConversionStatus", () => {
 
       mockedAxiosGet.mockResolvedValueOnce(responseWithoutPath);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Missing 'path' field pointing to final metadata.");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(
+        "Missing 'path' field pointing to final metadata.",
+      );
     });
 
     it("should throw error on metadata fetch failure", async () => {
@@ -145,7 +161,7 @@ describe("pollConversionStatus", () => {
 
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(metadataErrorResponse);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Failed to retrieve metadata.");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow("Failed to retrieve metadata.");
     });
 
     it("should throw error when metadata response missing URL", async () => {
@@ -156,7 +172,9 @@ describe("pollConversionStatus", () => {
 
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(metadataWithoutUrl);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Missing final download URL in metadata response.");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(
+        "Missing final download URL in metadata response.",
+      );
     });
   });
 
@@ -166,7 +184,7 @@ describe("pollConversionStatus", () => {
       mockedAxiosIsAxiosError.mockReturnValue(true);
       mockedAxiosGet.mockRejectedValueOnce(networkError);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Polling failed: Network error");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow("Polling failed: Network error");
     });
 
     it("should throw Markdown2PdfError on axios network error during metadata fetch", async () => {
@@ -175,7 +193,9 @@ describe("pollConversionStatus", () => {
 
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockRejectedValueOnce(networkError);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow("Polling failed: Metadata fetch failed");
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(
+        "Polling failed: Metadata fetch failed",
+      );
     });
 
     it("should re-throw non-axios errors", async () => {
@@ -183,7 +203,7 @@ describe("pollConversionStatus", () => {
       mockedAxiosIsAxiosError.mockReturnValue(false);
       mockedAxiosGet.mockRejectedValueOnce(customError);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow(customError);
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(customError);
     });
   });
 
@@ -191,7 +211,7 @@ describe("pollConversionStatus", () => {
     it("should use correct timeout for status requests", async () => {
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(mockMetadataResponse);
 
-      await pollConversionStatus(mockPath);
+      await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedWithTimeout).toHaveBeenCalledWith(expect.any(Promise), M2PDF_TIMEOUTS.REQUEST);
     });
@@ -199,7 +219,7 @@ describe("pollConversionStatus", () => {
     it("should use correct timeout for metadata requests", async () => {
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(mockMetadataResponse);
 
-      await pollConversionStatus(mockPath);
+      await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedWithTimeout).toHaveBeenCalledWith(expect.any(Promise), M2PDF_TIMEOUTS.METADATA);
     });
@@ -208,17 +228,26 @@ describe("pollConversionStatus", () => {
       const timeoutError = new Error("Request timeout");
       mockedWithTimeout.mockRejectedValueOnce(timeoutError);
 
-      await expect(pollConversionStatus(mockPath)).rejects.toThrow(timeoutError);
+      await expect(pollConversionStatus(mockPath, M2PDF_API_URL)).rejects.toThrow(timeoutError);
     });
   });
 
   describe("URL building", () => {
-    it("should build status URL correctly", async () => {
+    it("should build status URL correctly with default apiUrl", async () => {
       mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(mockMetadataResponse);
 
-      await pollConversionStatus(mockPath);
+      await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedBuildUrl).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
+    });
+
+    it("should build status URL correctly with custom apiUrl", async () => {
+      const customApiUrl = "https://custom.api.example.com";
+      mockedAxiosGet.mockResolvedValueOnce(mockDoneResponse).mockResolvedValueOnce(mockMetadataResponse);
+
+      await pollConversionStatus(mockPath, customApiUrl);
+
+      expect(mockedBuildUrl).toHaveBeenCalledWith(mockPath, customApiUrl);
     });
   });
 
@@ -229,7 +258,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse)
         .mockResolvedValueOnce(mockMetadataResponse);
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedSleep).toHaveBeenCalledTimes(1);
       expect(result).toBe(mockDownloadUrl);
@@ -241,7 +270,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse)
         .mockResolvedValueOnce(mockMetadataResponse);
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedSleep).toHaveBeenCalledTimes(1);
       expect(result).toBe(mockDownloadUrl);
@@ -253,7 +282,7 @@ describe("pollConversionStatus", () => {
         .mockResolvedValueOnce(mockDoneResponse)
         .mockResolvedValueOnce(mockMetadataResponse);
 
-      const result = await pollConversionStatus(mockPath);
+      const result = await pollConversionStatus(mockPath, M2PDF_API_URL);
 
       expect(mockedSleep).toHaveBeenCalledTimes(1);
       expect(result).toBe(mockDownloadUrl);
