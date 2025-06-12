@@ -3,13 +3,17 @@
     "declaration": true,
     "emitDeclarationOnly": false,
     "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "types": [
+      "node",
+      "bun-types"
+    ]
   },
   "include": [
     "src/**/*"

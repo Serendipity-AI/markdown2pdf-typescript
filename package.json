@@ -12,7 +12,7 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target node && tsc --emitDeclarationOnly",
     "start": "bun run dist/cli.js",
     "dev": "bun run src/cli.ts",
-    "test": "bun test",
+    "test": "jest",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "clean": "rimraf dist",
