@@ -1,12 +1,12 @@
-import { Markdown2PdfError } from './errors.js';
-import { URL } from 'url';
+import { Markdown2PdfError } from "./errors.js";
+import { URL } from "url";
 
 export const sleep = (ms: number): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 export const buildUrl = (path: string, baseUrl: string): string => {
-  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
   return new URL(path, baseUrl).toString();
 };
 
@@ -18,7 +18,7 @@ export const timeoutPromise = (ms: number): Promise<never> => {
 
 export const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
   return Promise.race([promise, timeoutPromise(ms)]);
-}; 
+};
 
 type ConversionPayload = {
   data: {
@@ -31,7 +31,7 @@ type ConversionPayload = {
   options: {
     document_name: string;
   };
-}
+};
 
 export function createConversionPayload(markdown: string, title: string, date: string): ConversionPayload {
   return {
@@ -40,10 +40,10 @@ export function createConversionPayload(markdown: string, title: string, date: s
       meta: {
         title,
         date,
-      }
+      },
     },
     options: {
-      document_name: "converted.pdf"
-    }
+      document_name: "converted.pdf",
+    },
   };
 }

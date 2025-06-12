@@ -1,34 +1,35 @@
-import axios from 'axios';
-import { z } from 'zod';
-import { M2PDF_TIMEOUTS, M2PDF_API_URL } from './constants';
-import { Markdown2PdfError } from './errors';
-import { handlePayment, pollConversionStatus, downloadPdf } from './helpers';
-import { ConvertToPdfParams, OfferDetails } from './types';
-import { createConversionPayload, withTimeout } from './utils';
+import axios from "axios";
+import { z } from "zod";
+import { M2PDF_TIMEOUTS, M2PDF_API_URL } from "./constants";
+import { Markdown2PdfError } from "./errors";
+import { handlePayment, pollConversionStatus, downloadPdf } from "./helpers";
+import { ConvertToPdfParams, OfferDetails } from "./types";
+import { createConversionPayload, withTimeout } from "./utils";
 
 export async function convertMarkdownToPdf(
   markdown: string,
-  options: ConvertToPdfParams = {}
+  options: ConvertToPdfParams = {},
 ): Promise<string | Buffer> {
   const { success, data: parsedMarkdown } = z.string().min(1).safeParse(markdown);
-  if (!success) throw new Markdown2PdfError('Invalid markdown input: must be a non-empty string');
-  
-  
+  if (!success) throw new Markdown2PdfError("Invalid markdown input: must be a non-empty string");
+
   const {
     onPaymentRequest,
     date,
     title = "Markdown2PDF.ai converted document",
     downloadPath,
-    returnBytes = false
+    returnBytes = false,
   } = options;
 
   if (!onPaymentRequest) throw new Markdown2PdfError("Payment required but no handler provided.");
 
-  const currentDate = date || new Date().toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+  const currentDate =
+    date ||
+    new Date().toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
 
   const payload = createConversionPayload(parsedMarkdown, title, currentDate);
   const startTime = Date.now();
@@ -36,12 +37,10 @@ export async function convertMarkdownToPdf(
 
   while (true) {
     try {
-      if (Date.now() - startTime > M2PDF_TIMEOUTS.POLLING) throw new Markdown2PdfError(`Conversion timed out after ${M2PDF_TIMEOUTS.POLLING}ms`);
+      if (Date.now() - startTime > M2PDF_TIMEOUTS.POLLING)
+        throw new Markdown2PdfError(`Conversion timed out after ${M2PDF_TIMEOUTS.POLLING}ms`);
 
-      const response = await withTimeout(
-        axios.post(`${M2PDF_API_URL}/v1/markdown`, payload),
-        M2PDF_TIMEOUTS.REQUEST
-      );
+      const response = await withTimeout(axios.post(`${M2PDF_API_URL}/v1/markdown`, payload), M2PDF_TIMEOUTS.REQUEST);
 
       if (response.status === 402) {
         const l402Offer = response.data;
@@ -52,7 +51,7 @@ export async function convertMarkdownToPdf(
           currency: offerData.currency,
           description: offerData.description || "",
           payment_context_token: l402Offer.payment_context_token,
-          payment_request_url: l402Offer.payment_request_url
+          payment_request_url: l402Offer.payment_request_url,
         };
 
         await handlePayment(offer, onPaymentRequest);
@@ -74,7 +73,7 @@ export async function convertMarkdownToPdf(
             currency: offerData.currency,
             description: offerData.description || "",
             payment_context_token: l402Offer.payment_context_token,
-            payment_request_url: l402Offer.payment_request_url
+            payment_request_url: l402Offer.payment_request_url,
           };
 
           if (!onPaymentRequest) {
