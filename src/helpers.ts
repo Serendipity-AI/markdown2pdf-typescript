@@ -4,7 +4,7 @@ import { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
 import { Markdown2PdfError } from "./errors.js";
 import { OfferDetails } from "./types.js";
-import { M2PDF_API_URL, M2PDF_POLL_INTERVAL, M2PDF_TIMEOUTS } from "./constants.js";
+import { M2PDF_POLL_INTERVAL, M2PDF_TIMEOUTS } from "./constants.js";
 import { sleep, buildUrl, withTimeout } from "./utils.js";
 
 export const handlePayment = async (
@@ -37,8 +37,8 @@ export const handlePayment = async (
   await sleep(M2PDF_POLL_INTERVAL);
 };
 
-export const pollConversionStatus = async (path: string): Promise<string> => {
-  const statusUrl = buildUrl(path, M2PDF_API_URL);
+export const pollConversionStatus = async (path: string, apiUrl: string): Promise<string> => {
+  const statusUrl = buildUrl(path, apiUrl);
   const pollStartTime = Date.now();
 
   while (true) {

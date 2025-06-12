@@ -103,11 +103,37 @@ describe("convertMarkdownToPdf", () => {
 
       expect(mockedCreateConversionPayload).toHaveBeenCalledWith(mockMarkdown, "Custom Title", "January 1, 2025");
       expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/v1/markdown`, mockPayload);
-      expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath);
+      expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
       expect(mockedDownloadPdf).toHaveBeenCalledWith(mockDownloadUrl, {
         downloadPath: undefined,
         returnBytes: true,
       });
+      expect(result).toBe(mockPdfBuffer);
+    });
+
+    it("should use custom apiUrl when provided", async () => {
+      const customApiUrl = "https://custom.api.example.com";
+      mockedAxiosPost.mockResolvedValueOnce(mockSuccessResponse);
+
+      const result = await convertMarkdownToPdf(mockMarkdown, {
+        onPaymentRequest: mockPaymentHandler,
+        apiUrl: customApiUrl,
+      });
+
+      expect(mockedAxiosPost).toHaveBeenCalledWith(`${customApiUrl}/v1/markdown`, mockPayload);
+      expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, customApiUrl);
+      expect(result).toBe(mockPdfBuffer);
+    });
+
+    it("should use default apiUrl when not provided", async () => {
+      mockedAxiosPost.mockResolvedValueOnce(mockSuccessResponse);
+
+      const result = await convertMarkdownToPdf(mockMarkdown, {
+        onPaymentRequest: mockPaymentHandler,
+      });
+
+      expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/v1/markdown`, mockPayload);
+      expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
       expect(result).toBe(mockPdfBuffer);
     });
 
