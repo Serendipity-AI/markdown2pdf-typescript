@@ -1,9 +1,10 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 import { Fewsats } from 'fewsats';
 // Configure the SDK
 const client = new Fewsats({ apiKey: process.env.FEWSATS_API_KEY });
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("Paying using Fewsats:");
   console.log(offer);
   

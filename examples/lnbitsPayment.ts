@@ -1,11 +1,12 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 import axios from "axios";
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 
 // Constants
 const LN_BITS_URL = "https://demo.lnbits.com/api/v1/payments";
 const ADMIN_KEY = process.env.LNBITS_ADMIN_KEY as string; // Set in your env
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("Paying using lnbits:");
 
   try {

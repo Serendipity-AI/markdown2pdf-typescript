@@ -1,6 +1,7 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("Pay invoice and press Enter:");
   console.log(offer.payment_request);
   await new Promise(resolve => { process.stdin.once("data", () => resolve(undefined)); });
