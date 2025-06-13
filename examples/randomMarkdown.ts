@@ -1,5 +1,6 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 import { OpenAI } from "openai"; // npm install openai
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 
 const openai = new OpenAI();
 
@@ -46,7 +47,7 @@ Start now.
   return (response.choices[0]?.message?.content || "");
 }
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("Paying using Alby:");
   // const payment = new Payment();
   // const payResult = await payment.bolt11_payment(offer.payment_request);

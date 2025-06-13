@@ -1,6 +1,7 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("⚡ Lightning payment required");
   console.log(`Amount: ${offer.amount} ${offer.currency}`);
   console.log(`Description: ${offer.description}`);

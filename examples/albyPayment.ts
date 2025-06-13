@@ -1,5 +1,6 @@
 import { convertMarkdownToPdf } from "@serendipityai/markdown2pdf-typescript";
 import axios from 'axios';
+import type { OfferDetails } from '@serendipityai/markdown2pdf-typescript';
 
 // Configure Alby client
 const ALBY_API_URL = 'https://api.getalby.com';
@@ -11,7 +12,7 @@ const client = axios.create({
   }
 });
 
-async function pay(offer: any) {
+async function pay(offer: OfferDetails) {
   console.log("Paying using Alby:");
   try {
     // Pay the invoice using Alby's API
