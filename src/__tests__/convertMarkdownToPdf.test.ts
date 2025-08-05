@@ -102,7 +102,7 @@ describe("convertMarkdownToPdf", () => {
       });
 
       expect(mockedCreateConversionPayload).toHaveBeenCalledWith(mockMarkdown, "Custom Title", "January 1, 2025");
-      expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/v1/markdown`, mockPayload);
+      expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/markdown`, mockPayload);
       expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
       expect(mockedDownloadPdf).toHaveBeenCalledWith(mockDownloadUrl, {
         downloadPath: undefined,
@@ -120,7 +120,7 @@ describe("convertMarkdownToPdf", () => {
         apiUrl: customApiUrl,
       });
 
-      expect(mockedAxiosPost).toHaveBeenCalledWith(`${customApiUrl}/v1/markdown`, mockPayload);
+      expect(mockedAxiosPost).toHaveBeenCalledWith(`${customApiUrl}/markdown`, mockPayload);
       expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, customApiUrl);
       expect(result).toBe(mockPdfBuffer);
     });
@@ -132,7 +132,7 @@ describe("convertMarkdownToPdf", () => {
         onPaymentRequest: mockPaymentHandler,
       });
 
-      expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/v1/markdown`, mockPayload);
+      expect(mockedAxiosPost).toHaveBeenCalledWith(`${M2PDF_API_URL}/markdown`, mockPayload);
       expect(mockedPollConversionStatus).toHaveBeenCalledWith(mockPath, M2PDF_API_URL);
       expect(result).toBe(mockPdfBuffer);
     });
