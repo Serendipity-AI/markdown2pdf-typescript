@@ -41,7 +41,7 @@ export async function convertMarkdownToPdf(
       if (Date.now() - startTime > M2PDF_TIMEOUTS.POLLING)
         throw new Markdown2PdfError(`Conversion timed out after ${M2PDF_TIMEOUTS.POLLING}ms`);
 
-      const response = await withTimeout(axios.post(`${apiUrl}/v1/markdown`, payload), M2PDF_TIMEOUTS.REQUEST);
+      const response = await withTimeout(axios.post(`${apiUrl}/markdown`, payload), M2PDF_TIMEOUTS.REQUEST);
 
       if (response.status === 402) {
         const l402Offer = response.data;
